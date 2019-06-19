@@ -24,7 +24,7 @@ cordova build android
 Write-Host "Finish generating apk" -ForegroundColor Green
 
 # Rename, move and upload to dropbox the apk
-$newName = "AllMovies_" + (Get-Date -Format FileDateTime) + ".apk"
+$newName = "AllMovies_" + (Get-Date -UFormat '%Y.%m.%dT%H.%M.%S') + ".apk"
 Rename-Item -Path ($apkDir + "\app-debug.apk") -NewName $newName
 Move-Item ($apkDir + "\" + $newName) -Destination $outputDir -force
 if($isWork){
