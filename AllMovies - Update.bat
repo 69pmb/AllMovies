@@ -1,7 +1,5 @@
 @ECHO OFF
 call git stash
-call git pull
+call git pull --rebase
 call git stash pop
-call yarn
-call yarn build
 pause
