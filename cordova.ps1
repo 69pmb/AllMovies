@@ -1,3 +1,8 @@
+# Set Java to 1.8
+Set-Variable -Name JAVA_HOME -Value "C:\Javatools\java\jdk1.8.0_11\bin;"
+Set-Item -path env:path -force -value ($JAVA_HOME + $env:path)
+java -version
+
 # paths variables
 $dir = Get-Location
 Set-Variable -Name "workspace" -Value "C:\workspace\HEAD\AllMovies"
@@ -16,7 +21,7 @@ yarn cordova
 Write-Host "Finish building" -ForegroundColor Green
 rm -r -fo cordova\AllMovies\www
 mkdir cordova\AllMovies\www
-xcopy /s dist cordova\AllMovies\www
+xcopy /q /s dist cordova\AllMovies\www
 Write-Host "Finish copying" -ForegroundColor Green
 cd cordova\AllMovies
 Write-Host "Build apk" -ForegroundColor Cyan
@@ -27,12 +32,6 @@ Write-Host "Finish generating apk" -ForegroundColor Green
 $newName = "AllMovies_" + (Get-Date -UFormat '%Y.%m.%dT%H.%M.%S') + ".apk"
 Rename-Item -Path ($apkDir + "\app-debug.apk") -NewName $newName
 Move-Item ($apkDir + "\" + $newName) -Destination $outputDir -force
-if($isWork){
-	Write-Host "Upload the apk to Dropbox" -ForegroundColor Cyan
-	cd $outputDir
-	C:\cmder\vendor\git-for-windows\bin\bash.exe dropbox.sh upload $newName "Documents/Dev"
-	Write-Host "Finish uploading" -ForegroundColor Green
-}
 
 # Logging result
 if((Get-Item ($outputDir + "\" + $newName)).length -lt 2400KB) {
