@@ -3,11 +3,17 @@ import { Injectable } from '@angular/core';
 import { Score } from './../../model/score';
 import { UtilsService } from './utils.service';
 import { Constants } from './../../constant/constants';
+import { ToastService } from './toast.service';
+import { DropboxService } from './dropbox.service';
 
 @Injectable()
 export class OmdbService {
 
-  constructor(private serviceUtils: UtilsService) { }
+  constructor(
+    private serviceUtils: UtilsService,
+    private toast: ToastService,
+    private dropbox: DropboxService
+    ) { }
 
   getScore(id: string): Promise<Score> {
     const url = `${Constants.OMDB_URL}${Constants.OMDB_ID}${id}${Constants.OMDB_API_KEY}`;
@@ -28,6 +34,10 @@ export class OmdbService {
         } else {
           return undefined;
         }
+      })
+      .catch((err) => {
+        this.serviceUtils.handlePromiseError(err, this.toast);
+        return undefined;
       });
   }
 }
