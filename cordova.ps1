@@ -3,6 +3,11 @@ Set-Variable -Name JAVA_HOME -Value "C:\Javatools\java\jdk1.8.0_11\bin;"
 Set-Item -path env:path -force -value ($JAVA_HOME + $env:path)
 java -version
 
+if((Get-Command java | Select-Object -ExpandProperty Version).Major -ne 8) {
+	Write-Host "NEED JAVA 8" -ForegroundColor Red
+	exit
+}
+
 # paths variables
 $dir = Get-Location
 Set-Variable -Name "workspace" -Value "C:\workspace\HEAD\AllMovies"
