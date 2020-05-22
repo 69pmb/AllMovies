@@ -1,5 +1,5 @@
 # Set Java to 1.8
-Set-Variable -Name JAVA_HOME -Value "C:\Javatools\java\jdk1.8.0_11\bin;"
+Set-Variable -Name JAVA_HOME -Value "C:\Program Files\Java\jdk1.8.0_231\bin;"
 Set-Item -path env:path -force -value ($JAVA_HOME + $env:path)
 java -version
 
@@ -12,10 +12,11 @@ if((Get-Command java | Select-Object -ExpandProperty Version).Major -ne 8) {
 $dir = Get-Location
 Set-Variable -Name "workspace" -Value "C:\workspace\HEAD\AllMovies"
 Set-Variable -Name "outputDir" -Value "C:\workspace\HEAD\Dropbox"
+Set-Variable -Name "web" -Value "\\myNas\web\AllMovies"
 $isWork = Test-Path -Path $workspace
 if(-not $isWork){
-	Set-Variable -Name "workspace" -Value "C:\workspace\AllMovies"
-	Set-Variable -Name "outputDir" -Value "C:\Utilisateur\Pierre-Marie\Dropbox"
+	Set-Variable -Name "workspace" -Value "C:\Users\Pierre-Marie\Documents\Dev\workspace\AllMovies"
+    Set-Variable -Name "outputDir" -Value "C:\Users\Pierre-Marie\Dropbox\Documents\Dev"
 }
 $apkDir = $workspace + "\cordova\AllMovies\platforms\android\app\build\outputs\apk\debug"
 cd $workspace
@@ -44,5 +45,16 @@ if((Get-Item ($outputDir + "\" + $newName)).length -lt 2400KB) {
 } else {
 	Write-Host "APK SUCCESSFULLY GENERATED" -ForegroundColor Green
 }
+
+# NAS deployement
+cd $web
+rm -r -fo dist 
+cd $workspace
+Copy-Item -Path dist -Destination $web -Recurse
+$content = Get-Content($web + "\dist\index.html")
+$content = $content.replace('file:///android_asset/www/','/')
+$content | out-file ($web + "\dist\index.html")
+Write-Host "APP SUCCESSFULLY DEPLOYED" -ForegroundColor Green
+
 cd $dir
 pause
