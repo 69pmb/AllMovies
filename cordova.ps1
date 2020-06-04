@@ -24,6 +24,10 @@ cd $workspace
 # build the app then build the apk
 Write-Host "Build angular app" -ForegroundColor Cyan
 yarn cordova
+# Insert timestamp
+$content = Get-Content(".\dist\index.html") -Encoding 'UTF8'
+$content = $content.replace('{{timestamp}}', (Get-Date -UFormat '%d/%m/%Y %Hh%M'))
+$content | out-file -Encoding 'UTF8' (".\dist\index.html")
 Write-Host "Finish building" -ForegroundColor Green
 rm -r -fo cordova\AllMovies\www
 mkdir cordova\AllMovies\www
@@ -34,7 +38,7 @@ Write-Host "Build apk" -ForegroundColor Cyan
 cordova build android
 Write-Host "Finish generating apk" -ForegroundColor Green
 
-# Rename, move and upload to dropbox the apk
+# Rename, move and upload the apk to dropbox
 $newName = "AllMovies_" + (Get-Date -UFormat '%Y.%m.%dT%H.%M.%S') + ".apk"
 Rename-Item -Path ($apkDir + "\app-debug.apk") -NewName $newName
 Move-Item ($apkDir + "\" + $newName) -Destination $outputDir -force
@@ -44,17 +48,18 @@ if((Get-Item ($outputDir + "\" + $newName)).length -lt 2400KB) {
 	Write-Host "AN ERROR OCCURRED" -ForegroundColor Red
 } else {
 	Write-Host "APK SUCCESSFULLY GENERATED" -ForegroundColor Green
-}
 
-# NAS deployement
-cd $web
-rm -r -fo dist 
-cd $workspace
-Copy-Item -Path dist -Destination $web -Recurse
-$content = Get-Content($web + "\dist\index.html")
-$content = $content.replace('file:///android_asset/www/','/')
-$content | out-file ($web + "\dist\index.html")
-Write-Host "APP SUCCESSFULLY DEPLOYED" -ForegroundColor Green
+	# NAS deployement
+	Write-Host "Deploying App" -ForegroundColor Cyan
+	cd $web
+	rm -r -fo dist 
+	cd $workspace
+	Copy-Item -Force -Path dist -Destination $web -Recurse
+	$content = Get-Content($web + "\dist\index.html")
+	$content = $content.replace('file:///android_asset/www/','/')
+	$content | out-file ($web + "\dist\index.html")
+	Write-Host "APP SUCCESSFULLY DEPLOYED" -ForegroundColor Green
+}
 
 cd $dir
 pause
