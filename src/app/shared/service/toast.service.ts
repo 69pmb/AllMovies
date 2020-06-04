@@ -14,7 +14,7 @@ export class ToastService {
 
   open(level: Level, message: string, translateArgs?: Object): void {
     if (message && message !== undefined && typeof message === 'string' && message !== '') {
-      this.snackBar.open(this.translate.instant(message, translateArgs), undefined, {
+      this.snackBar.open(/^[\w\._-]*$/.test(message) ? this.translate.instant(message, translateArgs) : message, undefined, {
         duration: 1500,
         panelClass: 'toast-' + level
       });
