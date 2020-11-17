@@ -18,7 +18,7 @@ if(-not $isWork){
 	Set-Variable -Name "workspace" -Value "C:\Users\Pierre-Marie\Documents\Dev\workspace\AllMovies"
     Set-Variable -Name "outputDir" -Value "C:\Users\Pierre-Marie\Dropbox\Documents\Dev"
 }
-$apkDir = $workspace + "\cordova\AllMovies\platforms\android\app\build\outputs\apk\debug"
+$apkDir = $workspace + "\cordova\AllMovies\platforms\android\app\build\outputs\apk\release"
 cd $workspace
 
 # build the app then build the apk
@@ -35,12 +35,12 @@ xcopy /q /s dist cordova\AllMovies\www
 Write-Host "Finish copying" -ForegroundColor Green
 cd cordova\AllMovies
 Write-Host "Build apk" -ForegroundColor Cyan
-cordova build android
+cordova build android --release
 Write-Host "Finish generating apk" -ForegroundColor Green
 
 # Rename, move and upload the apk to dropbox
 $newName = "AllMovies_" + (Get-Date -UFormat '%Y.%m.%dT%H.%M.%S') + ".apk"
-Rename-Item -Path ($apkDir + "\app-debug.apk") -NewName $newName
+Rename-Item -Path ($apkDir + "\app-release-unsigned.apk") -NewName $newName
 Move-Item ($apkDir + "\" + $newName) -Destination $outputDir -force
 
 # Logging result
