@@ -48,17 +48,8 @@ if((Get-Item ($outputDir + "\" + $newName)).length -lt 2400KB) {
 	Write-Host "AN ERROR OCCURRED" -ForegroundColor Red
 } else {
 	Write-Host "APK SUCCESSFULLY GENERATED" -ForegroundColor Green
-
+	."nas.ps1"
 	# NAS deployement
-	Write-Host "Deploying App" -ForegroundColor Cyan
-	cd $web
-	rm -r -fo dist 
-	cd $workspace
-	Copy-Item -Force -Path dist -Destination $web -Recurse
-	$content = Get-Content($web + "\dist\index.html")
-	$content = $content.replace('file:///android_asset/www/','/')
-	$content | out-file ($web + "\dist\index.html")
-	Write-Host "APP SUCCESSFULLY DEPLOYED" -ForegroundColor Green
 }
 
 cd $dir
