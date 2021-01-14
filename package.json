@@ -42,7 +42,7 @@
     "dropbox": "4.0.30",
     "flag-icon-css": "3.4.6",
     "jquery": "3.5.1",
-    "jsrsasign": "8.0.19",
+    "jsrsasign": "8.0.24",
     "jwt-decode": "2.2.0",
     "moment-mini-ts": "2.20.1",
     "ng-bootstrap": "1.6.3",
