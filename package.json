@@ -87,7 +87,7 @@
     "tslint": "5.20.1",
     "tslint-eslint-rules": "5.4.0",
     "tslint-origin-ordered-imports-rule": "1.2.2",
-    "typescript": "3.5.3",
+    "typescript": "3.9.9",
     "webpack-bundle-analyzer": "3.8.0"
   }
 }
